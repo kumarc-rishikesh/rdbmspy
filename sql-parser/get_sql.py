@@ -16,7 +16,7 @@ column_name = Group(
 table_name = identifier
 end_chars=one_of("limit ;", caseless=True)
 condition_operator = oneOf("= != < >")
-logical_operator = oneOf("AND OR")
+logical_operator = oneOf("AND OR and or")
 # where_condition = Opt("(")+ Group(identifier + condition_operator + (quotedString | Word(nums))) + Opt(")")+ Opt(logical_operator)
 where_condition = Opt("(")+ Group(identifier + condition_operator + (quotedString | identifier | Word(nums))) + Opt(")")+ Opt(logical_operator)
 where_conditions = Optional(OneOrMore(where_condition),default=[])

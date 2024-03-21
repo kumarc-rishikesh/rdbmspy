@@ -1,4 +1,5 @@
-from .condition_eval import Result, conds_operator, res_operator, convert_to_postfix, eval_data
+from .condition_eval import  conds_operator, res_operator, convert_to_postfix, eval_data
+from .result import Result 
 
 def run_where(inferred_schema, data_c,tq):
     #if no WHERE conditions, return the whole data
@@ -11,7 +12,7 @@ def run_where(inferred_schema, data_c,tq):
         return Result(op)
     # if 2 or more conditions, convert to postfix exression
     tokens=convert_to_postfix(tq['conditions'])
-    mark = {"AND","OR"}
+    mark = {"AND","OR", "and", "or"}
     stk = []
     f=0
     #evaluate postfix notation
@@ -33,7 +34,7 @@ def run_select(where_results,tq):
     select_fields=tq['columns']
     #check if wildcard 
     if select_fields[0] == "*":
-        return where_results 
+        return where_results
 
     #if not wildcard, get specified fields
     for row in where_results.data:
@@ -46,21 +47,21 @@ def run_select(where_results,tq):
 
 def run_limit(select_results,tq):
     op_arr=[]
-    limit=tq['limit']
+    dt=select_results.data
+    limit = float(tq['limit'])
     #using limit 0 as dont limit
     if limit==0:
         return select_results
-    else:
-        if len(select_results.data)<=limit:
+    else: 
+        if len(dt)<=limit:
             return select_results
         else:
-            data = select_results.data
             i=0
             while i<limit:
-                op_arr.append(data[i])
+                op_arr.append(dt[i])
                 i+=1
-    op=Result(op_arr)
-    return Result
+    op = Result(op_arr)
+    return op
 
 def get_query_results( data, query, inf_schema ):
     #Following applicable SQL order of execution FWGHSOL : WHERE->SELECT->LIMIT 

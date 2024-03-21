@@ -1,6 +1,4 @@
-class Result:
-    def __init__(self, data):
-        self.data = data
+from .result import Result
 
 def get_str_val(d,v):
     #check to see if the string is a string or a key
@@ -33,9 +31,9 @@ def get_num_val(d,v):
 
 #AND takes precedence over OR in SQL
 def prec(con):
-    if con == "OR":
+    if con == "OR" or con == "or":
         return 1
-    elif con == "AND":
+    elif con == "AND" or con == "and":
         return 2
     else:
         return 0
@@ -126,8 +124,9 @@ def res_operator(ip_arr, x):
             else:
                 op_arr.append(i)
         for i in good2:
-            if i in good1 and i not in intersect_arr:
-                intersect_arr.append(i)
+            if i in good1:
+                if i not in intersect_arr:
+                    intersect_arr.append(i)
             else:
                 op_arr.append(i)
     else:

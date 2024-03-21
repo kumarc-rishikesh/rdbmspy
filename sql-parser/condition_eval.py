@@ -1,6 +1,4 @@
-class Result:
-    def __init__(self, data):
-        self.data = data
+from result import Result
 
 def get_str_val(d,v):
     if "'" in v:
@@ -135,7 +133,7 @@ def res_operator(ip_arr, x):
 def eval_data(inferred_schema, data_c, x, a, b):
     res_arr=[]
     # print("x--------------------x")
-    print(a,b,x)
+    # print(a,b,x)
     # print("----------------------")
     if isinstance(a,Result):
         res_arr.append(a)

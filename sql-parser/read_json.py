@@ -1,3 +1,4 @@
+from functools import reduce
 # json_str = "[{ state: 'California', region: 'West', pop: 2312312321, pop_male: 3123123, pop_female: 123123 },{ state: 'Texas', region: 'South', pop: 100000, pop_male: 60000, pop_female: 40000 }]"
 def get_inferred_schema(data):
     inferred_schema = {}
@@ -11,7 +12,7 @@ def get_inferred_schema(data):
 def read_file_into_memory(filename):
     try:
         with open(filename, "r") as f:
-            file_string = f.read()
+            file_string = f.read().strip()
         return file_string
     except Exception as e:
         print("File reading was unsuccessful")
@@ -26,13 +27,16 @@ def get_json_arr(json_str):
         json_str.index("{")
         json_str.index("}")
         json_arr=[]
+        to_replace=['"',"'",'{','}','\n']
         json_str=json_str.strip()
         for i in json_str[2:-3].split('},'):
             d={}
             for j in i[1:].split(","):
                 key,val = j.split(":")
-                key = key.strip().replace('"','').replace("'",'')
-                val = val.strip().replace('"','').replace("'",'')
+                key=reduce((lambda text, char: text.replace(char, '')), to_replace, key)
+                key=key.strip().lower()
+                val=reduce((lambda text, char: text.replace(char, '')), to_replace, val)
+                val=val.strip()
                 if val.isnumeric():
                     d[key]=float(val)
                 else:

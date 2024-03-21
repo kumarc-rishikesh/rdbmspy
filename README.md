@@ -2,25 +2,30 @@
 An in-memory database that accepts JSON inputs & SQL queries , and returns the query result in the JSON format.
 ## Files
 - main. py
-- get_sql.py
-- query_engine.py
 - read_json.py
-- condition_eval.py
-- Result. py
+- get_sql.py
+- query/query_engine.py
+- query/condition_eval.py
+- query/result. py
 
 ## Steps to run
 ```
 1. nix develop
+2. ./main.bin <path/to/input/json> (may take a while to buiild python binary)
+	OR
 2. python3 main.py <path/to/input/json>
 ```
 or
 ```
 1. Get Python version 3.11.8 and pyparsing version 3.0.9
 2. python3 main.py <path/to/input/json>
+
+there are two jsons to test with in test_jsons/
 ```
 ## JSON Parser
 
-- The input json is in a non-traditional format hence I have written a primitive parser to be able to read it from a file in module read_json.py
+- The input json is in a non-traditional format hence I have written a parser to be able to read it from a file in module read_json.py
+  Limitation : The parser dislikes special characters and will remove them. It expects an array of json enclosed in quotes.
 - The file is first read into memory using the read_file_into_memory(), it then returns a string which is then parsed by get_json_arr
 ## SQL Parser
 - For SQL parsing, I am using the pyparsing library. It returns a json of type:
@@ -46,9 +51,9 @@ or
 	2. get_num_val
 	3. loop_
 	```
-- The Where conditions are evaluated in the condition_eval module
+- The Where conditions are evaluated in the condition_eval module.
+- I convert the infix WHERE conditions to postfix to be able to evaluate it ( AST was also an option I know TextQL uses )  
 
-- Firstly I convert the infix WHERE statements to postfix to be able to evaluate it ( AST was also an option I know TextQL uses )  
 - There are a few functions here:
 
 	1. get_str_val -> takes a string and returns either the string or the string in the attribute mentioned ( Ex : WHERE col1=’SomeString’ , WHERE col1 = col2 )

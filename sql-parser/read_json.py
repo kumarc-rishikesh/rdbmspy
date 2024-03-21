@@ -1,5 +1,6 @@
 from functools import reduce
-# json_str = "[{ state: 'California', region: 'West', pop: 2312312321, pop_male: 3123123, pop_female: 123123 },{ state: 'Texas', region: 'South', pop: 100000, pop_male: 60000, pop_female: 40000 }]"
+
+#infer the schema of the json read. this comes in handy later on
 def get_inferred_schema(data):
     inferred_schema = {}
     for i in data[0].keys():
@@ -9,6 +10,7 @@ def get_inferred_schema(data):
             inferred_schema[i] = "str"
     return inferred_schema
 
+#reads the file into memory (streaming would have been better)
 def read_file_into_memory(filename):
     try:
         with open(filename, "r") as f:
@@ -33,10 +35,14 @@ def get_json_arr(json_str):
             d={}
             for j in i[1:].split(","):
                 key,val = j.split(":")
+
+                #getting rid of unneccessary characters in the key, val strings 
                 key=reduce((lambda text, char: text.replace(char, '')), to_replace, key)
                 key=key.strip().lower()
                 val=reduce((lambda text, char: text.replace(char, '')), to_replace, val)
                 val=val.strip()
+
+                #store as float
                 if val.isnumeric():
                     d[key]=float(val)
                 else:

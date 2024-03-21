@@ -1,17 +1,20 @@
-from condition_eval import Result, conds_operator, res_operator, convert_to_postfix, eval_data
+from .condition_eval import Result, conds_operator, res_operator, convert_to_postfix, eval_data
 
 def run_where(inferred_schema, data_c,tq):
-    # print(inferred_schema)
-    if len(tq['conditions'])==0:
+    #if no WHERE conditions, return the whole data
+    if len(tq['conditions'][0])==0:
         return Result(data_c)
+    #if only 1 condition, evaluate
     elif len(tq['conditions'])==1:
         cond=tq['conditions'][0]
         op, rej = conds_operator(data_c,cond[1],cond[0],cond[2],inferred_schema)
         return Result(op)
+    # if 2 or more conditions, convert to postfix exression
     tokens=convert_to_postfix(tq['conditions'])
     mark = {"AND","OR"}
     stk = []
     f=0
+    #evaluate postfix notation
     for x in tokens:
         if isinstance(x,str):
             if x in mark:
@@ -28,8 +31,11 @@ def run_where(inferred_schema, data_c,tq):
 def run_select(where_results,tq):
     op_arr=[]
     select_fields=tq['columns']
+    #check if wildcard 
     if select_fields[0] == "*":
-        return where_results
+        return where_results 
+
+    #if not wildcard, get specified fields
     for row in where_results.data:
         op_json={}
         for field in select_fields:
@@ -41,6 +47,7 @@ def run_select(where_results,tq):
 def run_limit(select_results,tq):
     op_arr=[]
     limit=tq['limit']
+    #using limit 0 as dont limit
     if limit==0:
         return select_results
     else:

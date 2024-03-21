@@ -1,6 +1,6 @@
 from read_json import read_file_into_memory, get_json_arr
 from get_sql import parse_sql_query
-from query_engine import get_query_results
+from query.query_engine import get_query_results
 
 import sys
 

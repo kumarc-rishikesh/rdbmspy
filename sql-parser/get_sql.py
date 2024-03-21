@@ -3,7 +3,7 @@ from pyparsing import *
 
 select_stmt = CaselessKeyword("select")
 from_stmt = CaselessKeyword("from")
-where_stmt = CaselessKeyword("where")
+where_stmt = Optional(CaselessKeyword("where"))
 limit_stmt = Optional(CaselessKeyword("limit"))
 
 # Define parser components

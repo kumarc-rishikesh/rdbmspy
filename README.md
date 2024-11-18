@@ -1,4 +1,3 @@
-# TextQL Assigment
 An in-memory database that accepts JSON inputs & SQL queries , and returns the query result in the JSON format.
 ## Files
 - main. py
